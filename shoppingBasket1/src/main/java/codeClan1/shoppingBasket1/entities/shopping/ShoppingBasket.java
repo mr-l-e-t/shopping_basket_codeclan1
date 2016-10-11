@@ -44,6 +44,10 @@ public class ShoppingBasket
 	private static final BiFunction<ShoppingItem, Integer, Integer> DECREMENT_COUNT_OR_REMOVE_ITEM = 
 			(item, currentValue) -> (currentValue==INITIAL_ITEM_COUNT) ? null :  currentValue - INITIAL_ITEM_COUNT;
 	
+	/**
+	 * if total is above this threshold, apply ten percent discount
+	 */
+	private static final BigDecimal TEN_PERCENT_THRESHOLD = new BigDecimal(20);
 	
 	/**
 	 * does this shopping basket have a loyalty card
@@ -195,6 +199,28 @@ public class ShoppingBasket
 	 */
 	public BigDecimal calculateTotal()
 	{
+		BigDecimal total = getTotalPriceFor( items );
+		
+		if ( isTenPercentApplicableFor(total) )
+		{
+			total = ShoppingBasketOffer.TEN_PERSCENT_OFF.calculateReducedValueFor(total);
+		}
+		if ( isLoyaltyCardPresent() )
+		{
+			total = ShoppingBasketOffer.TWO_PERCENT_OFF.calculateReducedValueFor(total);
+		}
+		
+		return total;
+	}
+	
+	
+	/**
+	 * work out the total price for items. if applicable, use offers to discount price
+	 * @param items
+	 * @return
+	 */
+	private BigDecimal getTotalPriceFor(Map<ShoppingItem, Integer> items)
+	{
 		BigDecimal total = new BigDecimal(0);
 		
 		for(Entry<ShoppingItem, Integer> shoppingItemEntry : items.entrySet())
@@ -204,9 +230,11 @@ public class ShoppingBasket
 			
 			total = total.add( currentItem.getOfferOnThisItem().calculateTotalForOffer(currentItem, numberOfItems) );
 		}
-		
 		return total;
 	}
 	
-	
+	private boolean isTenPercentApplicableFor(BigDecimal total)
+	{
+		return total.compareTo(TEN_PERCENT_THRESHOLD) > 0;
+	}
 }

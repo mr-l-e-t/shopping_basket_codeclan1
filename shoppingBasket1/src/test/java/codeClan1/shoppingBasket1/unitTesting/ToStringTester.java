@@ -46,7 +46,7 @@ public class ToStringTester
 		assertTrue("shopping basket should have isLoyaltyCardPresent", shoppingItemToStringContent.contains("isLoyaltyCardPresent"));
 		assertTrue("shopping basket should have items", shoppingItemToStringContent.contains("items"));
 		assertTrue("shopping basket should have single item", shoppingItemToStringContent.contains(SINGLE_ITEM_NAME));
-		assertTrue("shopping basket should have offer", shoppingItemToStringContent.contains(ShoppingBasketOffer.TEN_PERSCENT_OFF_OVER_TWENTY_POUNDS.getDescription()));
+		assertTrue("shopping basket should have offer", shoppingItemToStringContent.contains(ShoppingBasketOffer.TEN_PERSCENT_OFF.getDescription()));
 	}
 	
 }

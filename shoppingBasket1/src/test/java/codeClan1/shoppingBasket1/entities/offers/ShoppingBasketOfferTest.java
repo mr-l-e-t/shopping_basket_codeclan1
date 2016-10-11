@@ -28,7 +28,7 @@ public class ShoppingBasketOfferTest
 	{
 		ShoppingBasket shoppingBasketWithTotalItemsWorthOverTwentyPounds = getShoppingBasketWithTotalItemsWorthOverTwentyPounds();
 		
-		assertTrue("shopping basket should have 10% off offer" , shoppingBasketWithTotalItemsWorthOverTwentyPounds.getCurrentOffers().contains(ShoppingBasketOffer.TEN_PERSCENT_OFF_OVER_TWENTY_POUNDS));
+		assertTrue("shopping basket should have 10% off offer" , shoppingBasketWithTotalItemsWorthOverTwentyPounds.getCurrentOffers().contains(ShoppingBasketOffer.TEN_PERSCENT_OFF));
 		
 		BigDecimal totalAfterDiscount = shoppingBasketWithTotalItemsWorthOverTwentyPounds.calculateTotal();
 
@@ -45,10 +45,10 @@ public class ShoppingBasketOfferTest
 					System.out.println("lucas: shoppingItemEntry: "+shoppingItemEntry);
 					return shoppingItemEntry.getKey().getPrice().multiply(new BigDecimal(shoppingItemEntry.getValue()));
 				};
-				
-		
+			
 			expectedTotal = shoppingBasketWithTotalItemsWorthOverTwentyPounds.getCopyOfBasketContent().entrySet().stream().
 			reduce(new BigDecimal(0), priceAccumulator, (a, b) -> a.add(b));
+			
 			System.out.println(ShoppingItem.GBP.format(expectedTotal));
 			BigDecimal tenPercentOff= expectedTotal.multiply(new BigDecimal(0.10));
 			System.out.println(ShoppingItem.GBP.format(tenPercentOff));
