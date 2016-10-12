@@ -17,7 +17,7 @@ However, if you wish to simply see the code, it can be found in the following:
 * Remove items from the shopping basket
 * Empty the shopping basket
 
-## Discounts applicable
+## Discounts applicable to the basket
 * Buy-one-get-one-free discounts on items
 * 10% off on totals greater than £20 (after bogof)
 * 2% off on total (after all other discounts) for customers with loyalty cards.
