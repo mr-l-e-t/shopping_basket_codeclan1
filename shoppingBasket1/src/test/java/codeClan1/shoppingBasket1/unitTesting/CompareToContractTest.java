@@ -27,7 +27,7 @@ import codeClan1.shoppingBasket1.entities.shopping.ShoppingItem;
  * <li> the implementor must ensure that x.compareTo(y)==0 implies that sgn(x.compareTo(z)) == sgn(y.compareTo(z)), for all z. </li>
  * </ul>
  */
-public class CompareToContractTester
+public class CompareToContractTest
 {
 	/**
 	 * ensure sgn(x.compareTo(y)) == -sgn(y.compareTo(x)) for all x and y. 

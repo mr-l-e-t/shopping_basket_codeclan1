@@ -1,18 +1,25 @@
 package codeClan1.shoppingBasket1;
 
 import static codeClan1.shoppingBasket1.factory.ShoppingBasketFactory.getShoppingBasketInstance;
+import static codeClan1.shoppingBasket1.factory.ShoppingBasketFactory.getShoppingBasketWithBOGOFAndOverTwentyPoundWorthOfItemsAndCustomerCardDiscount;
+import static codeClan1.shoppingBasket1.factory.ShoppingBasketFactory.getShoppingBasketWithLemonAndMangoNoLoyaltyCard;
+import static codeClan1.shoppingBasket1.factory.ShoppingBasketFactory.getShoppingBasketWithLemonsThatHaveBOGOFOffer;
 import static codeClan1.shoppingBasket1.factory.ShoppingBasketFactory.getShoppingBasketWithSingleItem;
-import static codeClan1.shoppingBasket1.factory.ShoppingBasketFactory.*;
-import static codeClan1.shoppingBasket1.factory.ShoppingItemFactory.*;
+import static codeClan1.shoppingBasket1.factory.ShoppingBasketFactory.getShoppingBasketWithTwoOfSameItemItem;
+import static codeClan1.shoppingBasket1.factory.ShoppingItemFactory.MORE_EXPENSIVE_SINGLE_ITEM_PRICE;
+import static codeClan1.shoppingBasket1.factory.ShoppingItemFactory.SINGLE_ITEM_PRICE;
+import static codeClan1.shoppingBasket1.factory.ShoppingItemFactory.getShoppingItemInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
+import codeClan1.shoppingBasket1.entities.offers.ShoppingBasketOffer;
 import codeClan1.shoppingBasket1.entities.shopping.ShoppingBasket;
 import codeClan1.shoppingBasket1.entities.shopping.ShoppingItem;
 
@@ -29,8 +36,6 @@ public class TestShoppingBasketTasks
 
 	private static final Integer SINGLE_ITEM = 1;
 	private static final Integer DOUBLE_ITEM = 2;
-	
-	
 	
 	@Test
 	public void assertBasketHasLoyaltyCard()
@@ -126,13 +131,6 @@ public class TestShoppingBasketTasks
 		
 		assertTrue("there should be no items in the basket", sb.getCopyOfBasketContent().isEmpty());
 	}
-	//calculate total off shopping basket
-	// items offers
-		// BOGOF
-		// buy two get third free
-	//	total offers
-		//10% off on totals > £20
-		//2% off on loyalty card
 	
 	@Test
 	public void assertCalculateTotalNoDiscounts()
@@ -151,7 +149,7 @@ public class TestShoppingBasketTasks
 	@Test
 	public void assertCalculateTotalBOGOFOnly()
 	{
-		ShoppingBasket sb = getShoppingBasketWithLemonsThatHaveBOGOFOffer();
+		ShoppingBasket sb = getShoppingBasketWithLemonsThatHaveBOGOFOffer(false);
 		
 		BigDecimal total = sb.calculateTotal();
 		
@@ -160,4 +158,42 @@ public class TestShoppingBasketTasks
 		assertEquals("calculated total is not as expected", expectedTotal, total);
 	}
 	
+	@Test
+	public void assertCalculateBOGOFAndOverTwentyPoundWorthOfItemsAndCustomerCardDiscount()
+	{
+		ShoppingBasket sb = getShoppingBasketWithBOGOFAndOverTwentyPoundWorthOfItemsAndCustomerCardDiscount();
+		
+		BigDecimal expectedTotal = calculateExpectedTotalFor(sb);
+		
+		BigDecimal total = sb.calculateTotal();
+		
+		assertEquals("calculated total is not as expected", expectedTotal, total);
+	}
+
+	/**
+	 * calculate expeted total outwith ShoppingBasket calculate funcitonality to confirm that 
+	 * the ShoppingBasket.calculateTotal() is working as expected with all discounts
+	 * 
+	 * @param sb
+	 * @return worked out total where it is assumed that 10% is applicable and 
+	 * loyalty card %2 off is also applicable
+	 */
+	private BigDecimal calculateExpectedTotalFor(ShoppingBasket ShoppingBasket)
+	{
+		BigDecimal totalForItems = new BigDecimal(0);
+		
+		for(Entry<ShoppingItem, Integer> shoppingItemEntry : ShoppingBasket.getCopyOfBasketContent().entrySet() )
+		{
+			ShoppingItem currentItem = shoppingItemEntry.getKey();
+			Integer numberOfItems = shoppingItemEntry.getValue();
+			
+			totalForItems = totalForItems.add( currentItem.getOfferOnThisItem().applyDiscountTo(currentItem, numberOfItems) );
+		}
+		
+		BigDecimal totalForBasket = ShoppingBasketOffer.TEN_PERSCENT_OFF.applyDiscountTo(totalForItems);
+	
+		totalForBasket = ShoppingBasketOffer.TWO_PERCENT_OFF.applyDiscountTo(totalForBasket);
+		
+		return totalForBasket;
+	}	
 }

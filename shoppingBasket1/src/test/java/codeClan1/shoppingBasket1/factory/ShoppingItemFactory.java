@@ -10,7 +10,8 @@ import codeClan1.shoppingBasket1.entities.shopping.ShoppingItem;
  * </br>
  * 11 Oct 2016
  * </br>
- * factory class for generating items for testing purpose
+ * factory class for generating items for testing purpose. 
+ * non extendable since it is for testing purposes
  */
 public final class ShoppingItemFactory
 {

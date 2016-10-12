@@ -13,14 +13,15 @@ import codeClan1.shoppingBasket1.entities.offers.ShoppingItemOffer;
  * </br>
  * 
  * Shopping item which is to be added to the shopping basket
- * 
+ * </br>
  * The price of the item is assumed to be in British Sterling Pounds, with decimal value of 2. eg. 0.35
- * 
+ * </br>
  * This class has a natural sorting order of shopping item name
+ * </br>
+ * This class contains a helper builder class
  */
 public class ShoppingItem implements Comparable<ShoppingItem>
 {
-	
 	/**
 	 * format of the price of items, in this case it's a decimal value with two trailing digits.
 	 * </br>
@@ -38,7 +39,7 @@ public class ShoppingItem implements Comparable<ShoppingItem>
 	private BigDecimal price;
 	
 	/**
-	 * the offer on this item
+	 * the offer applicable for this item
 	 */
 	private ShoppingItemOffer offerOnThisItem;
 	
@@ -71,8 +72,6 @@ public class ShoppingItem implements Comparable<ShoppingItem>
 		this.offerOnThisItem = builder.offerOnThisItem;
 	}
 	
-	
-	
 	/**
 	 * @return the name
 	 */
@@ -80,7 +79,6 @@ public class ShoppingItem implements Comparable<ShoppingItem>
 	{
 		return name;
 	}
-
 
 	/**
 	 * @return the price
@@ -105,8 +103,6 @@ public class ShoppingItem implements Comparable<ShoppingItem>
 	{
 		return offerOnThisItem;
 	}
-
-
 
 	@Override
 	public String toString()

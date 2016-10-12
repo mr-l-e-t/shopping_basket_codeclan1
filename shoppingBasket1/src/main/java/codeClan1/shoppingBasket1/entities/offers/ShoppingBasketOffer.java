@@ -17,13 +17,13 @@ public enum ShoppingBasketOffer
 			
 	
 	private final String description;
-	private final BigDecimal discountToReduce;
+	private final BigDecimal discountPercentageToApply;
 	
 	
-	private ShoppingBasketOffer(String description, BigDecimal discountToReduce)
+	private ShoppingBasketOffer(String description, BigDecimal discountPercentageToApply)
 	{
 		this.description = description;
-		this.discountToReduce = discountToReduce;
+		this.discountPercentageToApply = discountPercentageToApply;
 	}
 
 	/**
@@ -33,11 +33,16 @@ public enum ShoppingBasketOffer
 	{
 		return description;
 	}
-	
-	public BigDecimal calculateReducedValueFor(BigDecimal totalWithoutDiscount)
+	/**
+	 * apply discount to totalWithoutDiscount
+	 * @param totalWithoutDiscount
+	 * @return total with discount percentage applied
+	 * 
+	 */
+	public BigDecimal applyDiscountTo(BigDecimal totalWithoutDiscount)
 	{
 		
-		BigDecimal priceToReduceFromTotalPrice= totalWithoutDiscount.multiply(discountToReduce);
+		BigDecimal priceToReduceFromTotalPrice= totalWithoutDiscount.multiply(discountPercentageToApply);
 		return totalWithoutDiscount.subtract(priceToReduceFromTotalPrice);
 	}
 	
@@ -51,7 +56,7 @@ public enum ShoppingBasketOffer
 		toStringBuilder.append(", ");
 		toStringBuilder.append("description: "); toStringBuilder.append( description);
 		toStringBuilder.append(", ");
-		toStringBuilder.append("discountToReduce: "); toStringBuilder.append( discountToReduce);
+		toStringBuilder.append("discountToReduce: "); toStringBuilder.append( discountPercentageToApply);
 		toStringBuilder.append("]");
 		return toStringBuilder.toString();
 	}

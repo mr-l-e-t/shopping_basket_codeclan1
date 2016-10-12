@@ -59,19 +59,35 @@ public final class ShoppingBasketFactory
 		return shoppingBasketWithLemonAndMangoNoLoyaltyCard;
 		
 	}
-	public static ShoppingBasket getShoppingBasketWithLemonsThatHaveBOGOFOffer()
+	public static ShoppingBasket getShoppingBasketWithLemonsThatHaveBOGOFOffer(boolean isLoyaltyCard)
 	{
-		ShoppingBasket shoppingBasketWithLemonAndMangoNoLoyaltyCard = getShoppingBasketInstance(false);
-		shoppingBasketWithLemonAndMangoNoLoyaltyCard.add(getShoppingItemMangoBOGOFOffer(), getShoppingItemMangoBOGOFOffer());
+		ShoppingBasket shoppingBasketWithMango = getShoppingBasketInstance(isLoyaltyCard);
+		shoppingBasketWithMango.add(getShoppingItemMangoBOGOFOffer(), getShoppingItemMangoBOGOFOffer());
 		
-		return shoppingBasketWithLemonAndMangoNoLoyaltyCard;
+		return shoppingBasketWithMango;
 	}
 	
-	public static ShoppingBasket getShoppingBasketWithTotalItemsWorthOverTwentyPounds()
+	public static ShoppingBasket getShoppingBasketWithTotalItemsWorthOverTwentyPounds(boolean isLoyaltyCard)
 	{
-		ShoppingBasket shoppingBasketWithTotalItemsWorthOverTwentyPounds = getShoppingBasketInstanceAndOffers(false);
+		ShoppingBasket shoppingBasketWithTotalItemsWorthOverTwentyPounds = getShoppingBasketInstanceAndOffers(isLoyaltyCard);
 		shoppingBasketWithTotalItemsWorthOverTwentyPounds.add(getShoppingItemLemonNoOffer(), getShoppingItemLemonNoOffer());
 		return shoppingBasketWithTotalItemsWorthOverTwentyPounds;
+	}
+	/**
+	 * get shopping basket with three mangoes, three lemons, loyalty card, whose value is over £20.
+	 * @return shopping basket with expected total value of £36.9117
+	 */
+	public static ShoppingBasket getShoppingBasketWithBOGOFAndOverTwentyPoundWorthOfItemsAndCustomerCardDiscount()
+	{
+		ShoppingBasket shoppingBasket = getShoppingBasketInstance(true);
+		shoppingBasket.add( getShoppingItemMangoBOGOFOffer()
+						   ,getShoppingItemMangoBOGOFOffer()
+						   ,getShoppingItemMangoBOGOFOffer()
+						   ,getShoppingItemLemonNoOffer() 
+						   ,getShoppingItemLemonNoOffer()
+						   ,getShoppingItemLemonNoOffer() );
+		
+		return shoppingBasket;
 	}
 }
 

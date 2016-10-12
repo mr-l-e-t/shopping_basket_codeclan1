@@ -14,9 +14,10 @@ import codeClan1.shoppingBasket1.entities.shopping.ShoppingItem;
  */
 public enum ShoppingItemOffer
 {
-//	private static final int SINGLE_ITEM =1;
+
 	NO_OFFER("no discounts applicable", (shoppingItem, numberOfItems) -> shoppingItem.getPrice().multiply(new BigDecimal(numberOfItems))),
-	BUY_ONE_GET_ONE_FREE("buy one, get one free", (shoppingItem, numberOfItems) -> {
+	BUY_ONE_GET_ONE_FREE("buy one, get one free", (shoppingItem, numberOfItems) -> 
+	{
 		if (numberOfItems == 1)
 		{
 			return shoppingItem.getPrice();
@@ -54,7 +55,7 @@ public enum ShoppingItemOffer
 	 * @param numberOfItems
 	 * @return total price of items, deppending on offer
 	 */
-	public BigDecimal calculateTotalForOffer(ShoppingItem shoppingItem, Integer numberOfItems)
+	public BigDecimal applyDiscountTo(ShoppingItem shoppingItem, Integer numberOfItems)
 	{
 		return offerCalculator.apply(shoppingItem, numberOfItems);
 	}
@@ -67,7 +68,6 @@ public enum ShoppingItemOffer
 		toStringBuilder.append("name: "); toStringBuilder.append(this.name());
 		toStringBuilder.append(", ");
 		toStringBuilder.append("description: "); toStringBuilder.append( description);
-		
 		toStringBuilder.append("]");
 		return toStringBuilder.toString();
 	}

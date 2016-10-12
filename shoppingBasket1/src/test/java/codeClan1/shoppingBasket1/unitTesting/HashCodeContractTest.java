@@ -19,7 +19,7 @@ import codeClan1.shoppingBasket1.entities.shopping.ShoppingItem;
  * 	<li>if two objects are equals, then hashCode must produce the same integer result</li>
  * </ul>
  */
-public class HashCodeContractTester
+public class HashCodeContractTest
 {
 	/**
 	 * Whenever it is invoked on the same object more than once during an execution of a Java application, the hashCode method must consistently return the same integer

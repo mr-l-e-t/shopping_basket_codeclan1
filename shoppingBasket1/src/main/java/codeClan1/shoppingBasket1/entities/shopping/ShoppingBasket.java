@@ -1,10 +1,8 @@
 package codeClan1.shoppingBasket1.entities.shopping;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
@@ -23,9 +21,11 @@ import codeClan1.shoppingBasket1.entities.offers.ShoppingBasketOffer;
  * <ul>
  * 	<li>add items</li>
  * 	<li>remove items</li>
+ *  <li>empty basket</li>
  * 	<li>apply offers to items</li>
- * 	<li>calculate totals</li>
+ * 	<li>calculate total with discounts</li>
  * 
+ * This class contains a helper builder class
  */
 public class ShoppingBasket 
 {
@@ -34,7 +34,7 @@ public class ShoppingBasket
 	 */
 	private static final Integer INITIAL_ITEM_COUNT = 1;
 	/**
-	 * incrementor function for adding items
+	 * incrementor function for adding items to shopping basket
 	 */
 	private static final BiFunction<Integer, Integer, Integer> INCREMENT_ITEM_COUNT =  (oldValue, newValue) -> oldValue + newValue;
 	
@@ -57,17 +57,11 @@ public class ShoppingBasket
 	 * contents of shopping basket
 	 */
 	private Map<ShoppingItem, Integer> items = new HashMap<>();
-	/**
-	 * list of offers applicable to this basket 
-	 */
-	private List<ShoppingBasketOffer> offers = new ArrayList<>();
 	
 	
 	public static class Builder 
 	{
 		private boolean isLoyaltyCardPresent;
-		
-		private List<ShoppingBasketOffer> offers = new ArrayList<>();
 		
 		public Builder  isLoyaltyCardPresent( boolean isLoyaltyCardPresent)
 		{
@@ -76,7 +70,6 @@ public class ShoppingBasket
 		}
 		public Builder offers( ShoppingBasketOffer... offers )
 		{
-			this.offers.addAll(Arrays.asList(offers));
 			return this;
 		}
 		
@@ -95,7 +88,6 @@ public class ShoppingBasket
 	private ShoppingBasket(Builder builder)
 	{
 		this.isLoyaltyCardPresent = builder.isLoyaltyCardPresent;
-		this.offers.addAll(builder.offers);
 	}
 	
 	/**
@@ -122,18 +114,19 @@ public class ShoppingBasket
 		return new HashMap<>(items);
 	}
 	/**
-	 * add items to the basket, setting the intitial count of one per item. Increment item count by one, if already exists
-	 * @param itemList
+	 * add items to the basket, with initial count of one per item. Increment item count by one, if already exists
+	 * @param list of items. items may repeat themselves
 	 */
 	public void add(ShoppingItem... itemList)
 	{
-		if( isEmpty( itemList ) ) return ;
+		if( isEmpty( itemList ) ) return;
 		
 		Arrays.stream(itemList).forEach( itemKey ->
 			items.merge(itemKey, INITIAL_ITEM_COUNT, INCREMENT_ITEM_COUNT )
 		);
 
 	}
+	
 	private boolean isEmpty(ShoppingItem... itemList)
 	{
 		return itemList == null || itemList.length ==0;
@@ -163,14 +156,7 @@ public class ShoppingBasket
 	{
 		return items.isEmpty();
 	}
-	/**
-	 * return list of offers
-	 * @return
-	 */
-	public List<ShoppingBasketOffer> getCurrentOffers()
-	{
-		return new ArrayList<>(offers);
-	}
+	
 	
 	@Override
 	public String toString()
@@ -178,8 +164,6 @@ public class ShoppingBasket
 		StringBuilder toStringBuilder= new StringBuilder(this.getClass().getName());
 		toStringBuilder.append("[");
 		toStringBuilder.append("isLoyaltyCardPresent: "); toStringBuilder.append(isLoyaltyCardPresent);
-		toStringBuilder.append(", ");
-		toStringBuilder.append("offers: "); toStringBuilder.append(offers);
 		toStringBuilder.append(", ");
 		toStringBuilder.append("items: "); toStringBuilder.append(items);
 		toStringBuilder.append("]");
@@ -203,11 +187,11 @@ public class ShoppingBasket
 		
 		if ( isTenPercentApplicableFor(total) )
 		{
-			total = ShoppingBasketOffer.TEN_PERSCENT_OFF.calculateReducedValueFor(total);
+			total = ShoppingBasketOffer.TEN_PERSCENT_OFF.applyDiscountTo(total);
 		}
 		if ( isLoyaltyCardPresent() )
 		{
-			total = ShoppingBasketOffer.TWO_PERCENT_OFF.calculateReducedValueFor(total);
+			total = ShoppingBasketOffer.TWO_PERCENT_OFF.applyDiscountTo(total);
 		}
 		
 		return total;
@@ -223,13 +207,14 @@ public class ShoppingBasket
 	{
 		BigDecimal total = new BigDecimal(0);
 		
-		for(Entry<ShoppingItem, Integer> shoppingItemEntry : items.entrySet())
+		for(Entry<ShoppingItem, Integer> shoppingItemEntry : items.entrySet() )
 		{
 			ShoppingItem currentItem = shoppingItemEntry.getKey();
 			Integer numberOfItems = shoppingItemEntry.getValue();
 			
-			total = total.add( currentItem.getOfferOnThisItem().calculateTotalForOffer(currentItem, numberOfItems) );
+			total = total.add( currentItem.getOfferOnThisItem().applyDiscountTo(currentItem, numberOfItems) );
 		}
+		
 		return total;
 	}
 	

@@ -26,7 +26,7 @@ import codeClan1.shoppingBasket1.entities.shopping.ShoppingItem;
  * <li>For any non-null reference value x, x.equals(null) should return false.</li>
  * </ul>
  */
-public class EqualsContractTester
+public class EqualsContractTest
 {
 	/**
 	 * according to Object.equals
