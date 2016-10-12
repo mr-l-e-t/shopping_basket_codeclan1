@@ -1,4 +1,4 @@
-# Coding Challenge - Shopping Basket Task
+# Java Coding Challenge - Shopping Basket Task
 Shopping basket exercise for CodeClan
 
 In order for this project to build, you should have maven installed on your computer. 
